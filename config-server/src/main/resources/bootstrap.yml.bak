@@ -1,0 +1,28 @@
+# bootstrap.yml
+spring:
+  application:
+    name: config-server
+  config:
+    activate:
+      on-profile: native
+
+  cloud:
+    config:
+      server:
+        encrypt:
+          enabled: false
+        native:
+          search-locations: classpath:/config
+        git:
+          uri: https://github.com/genugx-x/toy-configs.git
+          search-paths: licensing-service
+        bootstrap: true
+
+server:
+  port: 8071
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
