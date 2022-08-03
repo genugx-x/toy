@@ -9,7 +9,7 @@ spring:
         git:
           uri: https://github.com/genugx-x/toy-configs.git
           search-paths: licensing-service
-          default-label: master # default 'main'
+          default-label: master # default 'main'. write 'master' or 'local'
 
 server:
   port: 8071
