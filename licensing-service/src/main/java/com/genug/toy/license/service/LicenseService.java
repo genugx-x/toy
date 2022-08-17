@@ -1,6 +1,8 @@
 package com.genug.toy.license.service;
 
+import com.genug.toy.license.config.ServiceConfig;
 import com.genug.toy.license.model.License;
+import com.genug.toy.license.repository.LicenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -12,17 +14,20 @@ import java.util.Random;
 public class LicenseService {
 
     @Autowired
-    MessageSource messageSource;
+    MessageSource messages;
+
+    @Autowired
+    private LicenseRepository licenseRepository;
+
+    @Autowired
+    ServiceConfig config;
 
     public License getLicense(String licenseId, String organizationId) {
-        License license = new License();
-        license.setId(new Random().nextInt(1000));
-        license.setLicenseId(licenseId);
-        license.setOrganizationId(organizationId);
-        license.setDescription("Software product");
-        license.setProductName("Ostock");
-        license.setLicenseType("full");
-        return license;
+        License license = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, licenseId);
+        if (null == license)
+            throw new IllegalArgumentException(String.format(messages.getMessage("license.search.error.message", null, null), licenseId, organizationId));
+
+        return license.withComment(config.getProperty());
     }
 
     public String createLicense(License license, String organizationId, Locale locale) {
@@ -31,7 +36,7 @@ public class LicenseService {
             license.setOrganizationId(organizationId);
             // responseMessage = String.format("This is the post and the object is: %s", license.toString());
             responseMessage = String.format(
-                    messageSource.getMessage("license.create.message", null, locale), // 컨트롤러에서 locale를 전달받은 경우
+                    messages.getMessage("license.create.message", null, locale), // 컨트롤러에서 locale를 전달받은 경우
                     license.toString()
             );
         }
@@ -44,7 +49,7 @@ public class LicenseService {
             license.setOrganizationId(organizationId);
             // responseMessage = String.format("This is the put and the object is: %s", license.toString());
             responseMessage = String.format(
-                    messageSource.getMessage("license.update.message", null, null),
+                    messages.getMessage("license.update.message", null, null),
                     license.toString()
             );
         }
