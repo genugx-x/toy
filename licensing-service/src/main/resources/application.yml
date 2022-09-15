@@ -3,6 +3,8 @@ spring:
     name: licensing-service
   config:
     import: optional:configserver:http://configserver:8071
+  profiles:
+    active: dev
 
 #  cloud:
 #    config:

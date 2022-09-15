@@ -4,12 +4,14 @@ spring:
   cloud:
     config:
       server:
-        encrypt:
-          enabled: false
+#        encrypt:
+#          enabled: false
         git:
           uri: https://github.com/genugx-x/toy-configs.git
           search-paths: licensing-service
           default-label: master # default 'main'. write 'master' or 'local'
+          username: genugx-x
+          password: aA!21569186
 
 server:
   port: 8071
@@ -19,3 +21,5 @@ management:
     web:
       exposure:
         include: "*"
+encrypt:
+  key: secretkey

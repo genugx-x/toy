@@ -1,0 +1,3 @@
+GET http://localhost:8071/licensing-service/dev
+
+GET http://localhost:8071/actuator
