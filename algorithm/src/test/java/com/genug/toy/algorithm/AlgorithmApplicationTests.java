@@ -54,12 +54,9 @@ class AlgorithmApplicationTests {
         }
          */
 
-        assertEquals(0, dfsBfs.solution("hit", "cog", new String[] {"hot", "dot", "dog", "lot", "log", "cog"}));
+        assertEquals(4, dfsBfs.solution("hit", "cog", new String[] {"hot", "dot", "dog", "lot", "log", "cog"}));
+        assertEquals(0, dfsBfs.solution("hit", "cog", new String[] {"hot", "dot", "dog", "lot", "log"}));
 
-//        String[] words = new String[] {
-//                "abcdefghij"
-//        };
-//        assertEquals(0, dfsBfs.solution("gmkldgmhgi", "smkfeiugzv", words));
 
     }
 

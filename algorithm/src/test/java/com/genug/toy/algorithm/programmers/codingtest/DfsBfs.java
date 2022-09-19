@@ -15,53 +15,97 @@ public class DfsBfs {
 
     @DisplayName("문자 변환")
     public int solution(String begin, String target, String[] words) {
-
+        this.answer = 0;
         List<Word> wordList = new ArrayList<>();
         wordList.add(new Word(begin));
-        // wordList.add(new Word(target));
         for (String word : words) {
             wordList.add(new Word(word));
         }
 
-        for (Word word : wordList) {
-            log.info("Word : {} --- first : {}, end : {}", word.original, word.first, word.end);
-            int count = 1;
-            for (String[] mid : word.mids) {
-                log.info("mid[{}] --- {}", count++, mid);
-            }
-            log.info("------------------------------------------------------------");
-        }
+//        for (Word word : wordList) {
+//            log.info("Word : {} --- first : {}, end : {}", word.original, word.first, word.end);
+//            int count = 1;
+//            for (String[] mid : word.mids) {
+//                log.info("mid[{}] --- {}", count++, mid);
+//            }
+//            log.info("------------------------------------------------------------");
+//        }
 
-//        Word word = wordList.get(0); // begin;
-//        wordList.remove(0);
-
-        List<String> graph = new ArrayList<>();
+        List<List<Word>> graph = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < wordList.size(); i++) {
-            sb.append(wordList.get(i).original + " ");
+            List<Word> list = new ArrayList<>();
+            list.add(wordList.get(i));
             for (int j = 0; j < wordList.size(); j++) {
                 if (i == j)
                     continue;
                 if (wordList.get(i).first.equals(wordList.get(j).first)) {
-                    sb.append(wordList.get(j).original + " ");
+                    list.add(wordList.get(j));
                 } else if (wordList.get(i).end.equals(wordList.get(j).end)) {
-                    sb.append(wordList.get(j).original + " ");
+                    list.add(wordList.get(j));
                 } else {
                     for (int n = 0; n < wordList.get(i).mids.size(); n++) {
                         if (wordList.get(i).mids.get(n)[0].equals(wordList.get(j).mids.get(n)[0]) &&
                                 wordList.get(i).mids.get(n)[1].equals(wordList.get(j).mids.get(n)[1])) {
-                            sb.append(wordList.get(j).original + " ");
+
+                            list.add(wordList.get(j));
                         }
                     }
                 }
             }
-            graph.add(sb.toString());
-            sb.setLength(0);
+            graph.add(list);
         }
-        for (String s : graph) {
-            log.info(s);
+
+        graph.get(0).get(0).visited = true;
+        Queue<SearchInfo> searchInfos = new LinkedList<>();
+        searchInfos.add(new SearchInfo(begin, 0, 0));
+        Queue<Queue<SearchInfo>> task = new LinkedList<>();
+        task.add(searchInfos);
+        while(!task.isEmpty()) {
+            searchInfos = task.poll();
+            Queue<SearchInfo> nextSearchInfos = new LinkedList<>();
+            while(!searchInfos.isEmpty()) {
+                SearchInfo info = searchInfos.poll();
+                bfs(target, info, graph, nextSearchInfos);
+            }
+            if (!nextSearchInfos.isEmpty())
+                task.add(nextSearchInfos);
         }
-        return 0;
+        return this.answer;
+    }
+
+    void bfs(String target, SearchInfo info, List<List<Word>> graph, Queue<SearchInfo> nextSearchInfos) {
+
+        log.info("{}---{}---{}", info.word, info.i, info.count);
+        if (info.word.equals(target)) {
+            log.info("{} --- {}", info.word, target);
+            log.info("문자변환 완료 ---- {}", info.count);
+            this.answer = info.count;
+            return;
+        }
+
+        for (Word word : graph.get(info.i)) {
+            if (!word.visited) {
+                word.visited = true;
+                for (int i = 0; i < graph.size(); i++) {
+                    if (graph.get(i).get(0).equals(word)) {
+                        nextSearchInfos.add(new SearchInfo(word.original, i, info.count+1));
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    class SearchInfo {
+        String word;
+        int i;
+        int count;
+        public SearchInfo(String word, int i, int count) {
+            this.word = word;
+            this.i = i;
+            this.count = count;
+        }
     }
 
     class Word {
@@ -69,6 +113,7 @@ public class DfsBfs {
         String first;
         List<String[]> mids;
         String end;
+        Boolean visited;
 
         public Word(String word) {
             this.original = word;
@@ -95,6 +140,7 @@ public class DfsBfs {
                 sb.setLength(0);
                 this.mids.add(strings);
             }
+            this.visited = false;
         }
     }
 
