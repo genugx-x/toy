@@ -1,0 +1,52 @@
+hit -- ? --- ? --> dog [답 : 4]
+
+hit [hot]
+	↖	
+	   h[ ]t
+	↙
+hot [lot, dot]
+	↖	
+	   [ ]ot
+	↙
+dot [dog, lot, hot]
+	↖	
+	   do[ ]
+	↙
+dog [dog, log, *cog]
+	↖	
+	   [ ]ot
+	↙
+cog [dog, log]
+
+
+3 ~ 10 글자 이하의 글자 배열에서
+한글자를 제외하고 동일한 글자끼리 노드 연결 연결
+
+1. 그래프 생성
+	> 스펠링 1개를 제외한 공통 단어 모음
+	> begin 에서 words 
+
+abcdefg
+abcdefp
+
+h	o	t
+h	i	t
+h	i	m
+h	n	t
+
+d	o	t
+l	o	t
+
+hit -> hot
+hit [ {'', 'i', 't'}, {'h', '', 't'}, {'h', 'o', ''}	]
+
+hog -> cog 1
+
+
+2. bfs 탐색
+3. 결과 도출
+
+
+
+
+

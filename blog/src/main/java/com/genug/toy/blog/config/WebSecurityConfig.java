@@ -67,6 +67,7 @@ public class WebSecurityConfig {
                 jwtAuthenticationFilter,
                 CorsFilter.class
         );
+
 //        http.addFilter(filter03);
 //        http.addFilterAfter(filter02, CorsFilter.class);
 //        http.addFilterAfter(filter01, SampleFilter2.class);

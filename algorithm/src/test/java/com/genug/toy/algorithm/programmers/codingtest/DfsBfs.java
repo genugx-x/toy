@@ -5,15 +5,98 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 @Component
 public class DfsBfs {
 
     private static Logger log = LoggerFactory.getLogger(DfsBfs.class);
     private Integer count = 0;
+
+    @DisplayName("문자 변환")
+    public int solution(String begin, String target, String[] words) {
+
+        List<Word> wordList = new ArrayList<>();
+        wordList.add(new Word(begin));
+        // wordList.add(new Word(target));
+        for (String word : words) {
+            wordList.add(new Word(word));
+        }
+
+        for (Word word : wordList) {
+            log.info("Word : {} --- first : {}, end : {}", word.original, word.first, word.end);
+            int count = 1;
+            for (String[] mid : word.mids) {
+                log.info("mid[{}] --- {}", count++, mid);
+            }
+            log.info("------------------------------------------------------------");
+        }
+
+//        Word word = wordList.get(0); // begin;
+//        wordList.remove(0);
+
+        List<String> graph = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < wordList.size(); i++) {
+            sb.append(wordList.get(i).original + " ");
+            for (int j = 0; j < wordList.size(); j++) {
+                if (i == j)
+                    continue;
+                if (wordList.get(i).first.equals(wordList.get(j).first)) {
+                    sb.append(wordList.get(j).original + " ");
+                } else if (wordList.get(i).end.equals(wordList.get(j).end)) {
+                    sb.append(wordList.get(j).original + " ");
+                } else {
+                    for (int n = 0; n < wordList.get(i).mids.size(); n++) {
+                        if (wordList.get(i).mids.get(n)[0].equals(wordList.get(j).mids.get(n)[0]) &&
+                                wordList.get(i).mids.get(n)[1].equals(wordList.get(j).mids.get(n)[1])) {
+                            sb.append(wordList.get(j).original + " ");
+                        }
+                    }
+                }
+            }
+            graph.add(sb.toString());
+            sb.setLength(0);
+        }
+        for (String s : graph) {
+            log.info(s);
+        }
+        return 0;
+    }
+
+    class Word {
+        String original;
+        String first;
+        List<String[]> mids;
+        String end;
+
+        public Word(String word) {
+            this.original = word;
+            this.first = word.substring(1);
+            char[] chars = word.toCharArray();
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < chars.length-1; i++) {
+                sb.append(chars[i]);
+            }
+            this.end = sb.toString();
+            sb.setLength(0);
+            this.mids = new ArrayList<>();
+            for (int i = 1; i < chars.length-1; i++) {
+                String[] strings = new String[2];
+                for (int j = 0; j < i; j++) {
+                    sb.append(chars[j]);
+                }
+                strings[0] = sb.toString();
+                sb.setLength(0);
+                for (int j = i+1; j < chars.length; j++) {
+                    sb.append(chars[j]);
+                }
+                strings[1] = sb.toString();
+                sb.setLength(0);
+                this.mids.add(strings);
+            }
+        }
+    }
 
     @DisplayName("게임 맵 최단거리")
     public int solution(int[][] maps) {
@@ -44,20 +127,18 @@ public class DfsBfs {
             }
             if (nextTask.isEmpty())
                 break;
+            printVisited(maps, visited);
             tasks.add(nextTask);
             // printVisited(maps, visited);
         }
 
 
-        /*
         queue.add(new int[] {0, 0});
         visited[0][0] = true;
-        printVisited(visited);
         while (!queue.isEmpty()) {
             int[] coordinate = queue.poll();
             bfs(coordinate[0], coordinate[1], maps, visited);
         }
-         */
 
         return this.answer; // 상대 팀 진영에 도달 못하는 경우 -1
     }
@@ -154,12 +235,15 @@ public class DfsBfs {
         for (int i = 0; i < maps.length; i++) {
             for (int j = 0; j < maps[i].length; j++) {
                 if (maps[i][j] == 1 && visited[i][j])
-                    System.out.print('♤');
+                    System.out.print('★');
                 else
                     System.out.print(maps[i][j] == 0 ? '★' : '☆');
             }
             System.out.println();
         }
     }
+
+
+
 
 }
