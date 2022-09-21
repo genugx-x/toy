@@ -1,5 +1,5 @@
 import './App.css';
-import ClassPrototype from "./R012_Class&Prototype";
+import State from "./part2/State";
 
 function App() {
   return (
@@ -7,7 +7,9 @@ function App() {
           <h1>Start React 200!</h1>
           <p>CSS 적용하기</p>
           {/*<LifecycleEx prop_value = 'FromApp.js' />*/}
-          <ClassPrototype />
+          <State>
+              <span> node from App.js</span>
+          </State>
       </div>
   );
 }
